@@ -8,6 +8,7 @@ export default {
             form: {
                 title: null,
                 body: null,
+                image: null
             },
         }
     },
@@ -24,6 +25,7 @@ export default {
             this.form = {
                 title: null,
                 body: null,
+                image: null,
             }
         },
         save: function (data) {
@@ -34,12 +36,14 @@ export default {
         },
         edit: function (data) {
             this.form = Object.assign({}, data);
+            this.form.image = null;
             this.editMode = true;
             this.openModal();
         },
         update: function (data) {
+            console.log(data);
             data._method = 'PUT';
-            this.$inertia.put('/admin/posts/' + data.id, data)
+            this.$inertia.post('/admin/posts/' + data.id, data)
             this.reset();
             this.closeModal();
         },
@@ -81,14 +85,16 @@ defineProps({
                                 <th class="px-4 py-2 w-20">No.</th>
                                 <th class="px-4 py-2">Title</th>
                                 <th class="px-4 py-2">Body</th>
+                                <th class="px-4 py-2">Image</th>
                                 <th class="px-4 py-2">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="row in data">
+                            <tr v-for="row in  data ">
                                 <td class="border px-4 py-2">{{ row.id }}</td>
                                 <td class="border px-4 py-2">{{ row.title }}</td>
                                 <td class="border px-4 py-2">{{ row.body }}</td>
+                                <td class="border px-4 py-2"> <img :src="`/storage/${row.image}`" alt="" title=""> </td>
                                 <td class="border px-4 py-2">
                                     <button @click="edit(row)"
                                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -126,6 +132,10 @@ defineProps({
                                                         id="exampleFormControlInput1" placeholder="Enter Title"
                                                         v-model="form.title">
                                                     <!-- <div v-if="page.errors.title" class="text-red-500">{{ page.errors.title[0] }}</div> -->
+                                                </div>
+                                                <div class="mb-4">
+                                                    <input type="file" name="image"
+                                                        @input="form.image = $event.target.files[0]" />
                                                 </div>
                                                 <div class="mb-4">
                                                     <label for="exampleFormControlInput2"

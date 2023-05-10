@@ -21,7 +21,7 @@ class PostController extends Controller
         return Inertia::render('Posts', ['data' => $data]);
     }
 
-    /**
+    /*
      * Show the form for creating a new resource.
      *
      * @return Response
@@ -32,9 +32,20 @@ class PostController extends Controller
         Validator::make($request->all(), [
             'title' => ['required'],
             'body' => ['required'],
+            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ])->validate();
 
-        Post::create($request->all());
+        $image_path = '';
+        
+        if ($request->hasFile('image')) {
+            $image_path = $request->file('image')->store('image', 'public');
+        }
+
+        Post::create([
+            'title' => $request->title,
+            'body' => $request->body,
+            'image' => $image_path
+        ]);
 
         return redirect()->back()->with('message', 'Post Created Successfully.');
     }
@@ -49,10 +60,22 @@ class PostController extends Controller
         Validator::make($request->all(), [
             'title' => ['required'],
             'body' => ['required'],
+            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+
         ])->validate();
 
         if ($request->has('id')) {
-            Post::find($request->input('id'))->update($request->all());
+
+            $updateData = [
+                'title' => $request->title,
+                'body' => $request->body,
+            ];
+            
+            if ($request->hasFile('image')) {
+                $updateData['image'] = $request->file('image')->store('image', 'public');
+            }
+
+            Post::find($request->input('id'))->update($updateData);
             return redirect()->back()->with('message', 'Post Updated Successfully.');
         }
     }

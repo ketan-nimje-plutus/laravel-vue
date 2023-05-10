@@ -18,10 +18,11 @@ class UserController extends Controller
     public function __invoke(Request $request)
     {
         $globalSearch = AllowedFilter::callback('global', function ($query, $value) {
-
             $query->where(function ($query) use ($value) {
                 Collection::wrap($value)->each(function ($value) use ($query) {
-                    $query->orWhere('name', 'LIKE', "%{$value}%")->orWhere('email', 'LIKE', "%{$value}%");
+                    $query
+                        ->orWhere('name', 'LIKE', "%{$value}%")
+                        ->orWhere('email', 'LIKE', "%{$value}%");
                 });
             });
         });

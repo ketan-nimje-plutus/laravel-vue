@@ -4,12 +4,10 @@ import { Head } from '@inertiajs/vue3';
 import { Table } from "@protonemedia/inertiajs-tables-laravel-query-builder";
 
 defineProps(["users"])
-
 </script>
 
 <template>
     <Head title="Dashboard" />
-
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">

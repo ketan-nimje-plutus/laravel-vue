@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CustomeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -34,18 +35,14 @@ Route::get('/admin/dashboard', function () {
     return Inertia::render('Dashboard', ['data' => Post::all()]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-
 Route::middleware('auth')->group(function () {
-
     Route::get('/admin/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/admin/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/admin/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('/admin/posts', PostController::class);
-
-
-
     Route::get('/admin/posts', [PostController::class, 'index'])->name('posts');
     Route::get('/admin/users', UserController::class)->name('users');
+    Route::get('/admin/custome', [CustomeController::class, 'index'])->name('custome');
 });
 
 require __DIR__ . '/auth.php';
